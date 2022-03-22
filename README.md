@@ -1,2 +1,2 @@
 # AssistenteVirtualRosie
-Assistente Virtual com Python e AI
+Assistente Virtual com Python
