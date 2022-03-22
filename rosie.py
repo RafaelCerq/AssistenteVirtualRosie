@@ -1,3 +1,4 @@
+import json
 from os import remove
 
 import speech_recognition as sr
@@ -6,6 +7,7 @@ from gtts import gTTS
 from playsound import playsound # WINDOWS
 from requests import get
 from bs4 import BeautifulSoup
+import webbrowser as browser
 
 
 ##### CONFIGURAÇÕES #####
@@ -55,6 +57,16 @@ def cria_audio(mensagem):
 def executa_comandos(trigger):
     if 'notícias' in trigger:
         ultimas_noticias()
+
+    elif 'toca' in trigger and 'stratovarius' in trigger:
+        playlists('stratovarius')
+
+    elif 'tempo agora' in trigger:
+        previsao_tempo(tempo=True)
+
+    elif 'temperatura hoje' in trigger:
+        previsao_tempo(minmax=True)
+
     else:
         mensagem = trigger.strip(hotword)
         cria_audio(mensagem)
@@ -71,13 +83,32 @@ def ultimas_noticias():
         mensagem = item.title.text
         cria_audio(mensagem)
 
+def playlists(album):
+    if album == '':
+        browser.open('https://open.spotify.com/track/1IaQLINjiOCSv4INrrv0aS?si=2ebe0b2533f040c5')
+    elif album == 'stratovarius':
+        browser.open('https://open.spotify.com/track/6i79bRJSNbFkHU6wVsqVWY?si=80918ba9f20549af')
 
+def previsao_tempo(tempo=False, minmax=False):
+    #https://api.openweathermap.org/data/2.5/weather?q=C%C3%A2ndido%20Mota&appid=59eca70c674af8e32b001b32f0b1f491&units=metric&lang=pt
+    site = get('https://api.openweathermap.org/data/2.5/weather?id=3467542&appid=59eca70c674af8e32b001b32f0b1f491&units=metric&lang=pt')
+    clima = site.json()
+    #print(json.dumps(clima, indent=4))
+    temperatura = clima['main']['temp']
+    minima = clima['main']['temp_min']
+    maxima = clima['main']['temp_max']
+    descricao = clima['weather'][0]['description']
+    if tempo:
+        mensagem = f'No momento fazem {temperatura} graus com: {descricao}'
+    if minmax:
+        mensagem = f'Mínima de {minima} e máxima de {maxima}'
+    cria_audio(mensagem)
 
 
 def main():
     while(True):
         monitora_audio()
 
-#main()
+main()
 
-ultimas_noticias()
+#previsao_tempo(True, True)

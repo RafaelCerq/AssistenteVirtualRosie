@@ -10,3 +10,6 @@ Instalações:
 - playsound (pip install playsound==1.2.2)
 - gcloud
 - google-api-python-client
+- requests
+- bs4
+- remove
