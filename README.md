@@ -7,6 +7,6 @@ Instalações:
 - SpeechRecognition
 - PyAudio
 - gTTS
-- playsound
+- playsound (pip install playsound==1.2.2)
 - gcloud
 - google-api-python-client
